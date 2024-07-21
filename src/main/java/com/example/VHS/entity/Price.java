@@ -1,4 +1,4 @@
-package com.example.VHS.entities;
+package com.example.VHS.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.example.VHS.service;
 
-import com.example.VHS.entities.User;
-import com.example.VHS.repositories.UserRepository;
+import com.example.VHS.entity.User;
+import com.example.VHS.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

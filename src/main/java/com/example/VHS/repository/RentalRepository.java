@@ -1,6 +1,6 @@
-package com.example.VHS.repositories;
+package com.example.VHS.repository;
 
-import com.example.VHS.entities.Rental;
+import com.example.VHS.entity.Rental;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
