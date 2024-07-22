@@ -2,7 +2,7 @@ package com.example.VHS.controller;
 
 
 import com.example.VHS.entity.Vhs;
-import com.example.VHS.exception.rentalException;
+import com.example.VHS.exception.RentalException;
 import com.example.VHS.service.VhsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class VhsController {
     public List<Vhs> getAllVhses(){
         List<Vhs> vhsList = vhsService.getAllVhs();
         if(vhsList.isEmpty()){
-            throw new rentalException("No VHSes found!");
+            throw new RentalException("No VHSes found!");
         }
         return vhsList;
     }
@@ -35,12 +35,12 @@ public class VhsController {
     public ResponseEntity<Vhs> createVhs(@RequestParam String name,@RequestParam Integer totalNumber) {
         try {
             if (name.equals("") || totalNumber <= 0) {
-                throw new rentalException("Please check your request!");
+                throw new RentalException("Please check your request!");
             }
             List<Vhs> vhsList = vhsService.getAllVhs();
             boolean vhsExists = vhsList.stream().anyMatch(item -> item.getName().equalsIgnoreCase(name));
             if(vhsExists){
-                throw new rentalException("A VHS with the name " + name + " already exists.");
+                throw new RentalException("A VHS with the name " + name + " already exists.");
             }
             Vhs vhs = new Vhs();
             vhs.setName(name);

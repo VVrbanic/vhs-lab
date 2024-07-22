@@ -1,7 +1,7 @@
 package com.example.VHS.service;
 
 import com.example.VHS.entity.Price;
-import com.example.VHS.exception.rentalException;
+import com.example.VHS.exception.RentalException;
 import com.example.VHS.repository.PriceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class PriceService {
         Optional<Price> optionalActivePrice = getActivePrice();
         if(optionalActivePrice.isEmpty()){
             logger.warn("There is no active price!");
-            throw new rentalException("There is no active price, the new price has been added and set to the active price");
+            throw new RentalException("There is no active price, the new price has been added and set to the active price");
         }else{
             Price activePrice = optionalActivePrice.get();
             activePrice.setActive(Boolean.FALSE);

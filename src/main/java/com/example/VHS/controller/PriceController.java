@@ -1,7 +1,6 @@
 package com.example.VHS.controller;
 
 import com.example.VHS.entity.Price;
-import com.example.VHS.exception.rentalException;
 import com.example.VHS.service.PriceService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -9,14 +8,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/prices")
 public class PriceController {
+
+
     private static final Logger logger = LoggerFactory.getLogger(PriceController.class);
 
     @Autowired
@@ -24,7 +28,7 @@ public class PriceController {
 
     @PostMapping("/add")
     public ResponseEntity<Price> addNewPrice(@Valid @RequestBody Price price){
-        try{
+        try {
             //add new price
             LocalDateTime time = LocalDateTime.now();
             price.setActive(Boolean.TRUE);
@@ -38,4 +42,19 @@ public class PriceController {
         }
 
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex){
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        return errors;
+    }
+
 }

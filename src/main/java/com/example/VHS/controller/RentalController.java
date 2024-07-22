@@ -3,7 +3,7 @@ package com.example.VHS.controller;
 import com.example.VHS.entity.Rental;
 import com.example.VHS.entity.User;
 import com.example.VHS.entity.Vhs;
-import com.example.VHS.exception.rentalException;
+import com.example.VHS.exception.RentalException;
 import com.example.VHS.service.RentalService;
 import com.example.VHS.service.UserService;
 import com.example.VHS.service.VhsService;
@@ -41,7 +41,7 @@ public class RentalController {
             Vhs vhs = vhsService.getVhsById(vhsId);
             //check if the film is avaliable
             if (vhs.getNumberInStock() <= 0){
-                throw new rentalException("No movie in stock!");
+                throw new RentalException("No movie in stock!");
             }
             User user = userService.getUserById(userId);
             Rental rental = new Rental();
@@ -67,7 +67,7 @@ public class RentalController {
 
             Rental rental = rentalService.getRentalById(id);
             if(rental.getReturnDate() != null){
-                throw new rentalException("This rental has already been returned!");
+                throw new RentalException("This rental has already been returned!");
             }
             rental.setReturnDate(LocalDateTime.now().plusDays(10));
             Rental retunRental = rentalService.returnRental(rental);
@@ -94,7 +94,7 @@ public class RentalController {
                 rental.setUnpaidDue(newDue);
             }
             if(rental.getReturnDate() != null){
-                throw new rentalException("This rental has already been returned!");
+                throw new RentalException("This rental has already been returned!");
             }
             rental.setReturnDate(LocalDateTime.now().plusDays(10));
             Rental returnRental = rentalService.returnRental(rental);
@@ -106,7 +106,6 @@ public class RentalController {
         }
 
     }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationException(MethodArgumentNotValidException ex){
@@ -120,4 +119,5 @@ public class RentalController {
 
         return errors;
     }
+
 }
