@@ -4,16 +4,20 @@ import com.example.VHS.controller.RentalController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DuplicateReturnRentalException extends RuntimeException{
+public class rentalException extends RuntimeException {
     private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
 
-    public DuplicateReturnRentalException(String message) {
+    public rentalException(String message) {
         super(message);
+        logger.warn(message);
+        System.out.println(message);
+
     }
 
-    public DuplicateReturnRentalException(String message, Throwable cause) {
+    public rentalException(String message, Throwable cause) {
         super(message, cause);
-        logger.error(message);
+        logger.warn(message);
+        System.out.println(message);
 
     }
 }

@@ -66,6 +66,15 @@ public class RentalService {
         return returnRental;
     }
 
+    public void payDue(Rental rental){
+        rentalRepository.save(rental);
+        if(rental.getUnpaidDue() == 0){
+            logger.info("Great you payed your due for:" + rental.getVhs().getName());
+        }else{
+            logger.info("Great you payed part of your due for:" + rental.getVhs().getName() + " you still need to pay:" + rental.getUnpaidDue());
+        }
+    }
+
     private void decreaseVHSStock(Vhs vhs) {
         if (vhs != null && vhs.getNumberInStock() > 0) {
             // Decrease stock by 1

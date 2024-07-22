@@ -1,7 +1,7 @@
 package com.example.VHS.controller;
 
 import com.example.VHS.entity.User;
-import com.example.VHS.exception.UsersNotFoundException;
+import com.example.VHS.exception.rentalException;
 import com.example.VHS.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class UserController {
     public List<User> getAllUsers() {
         List<User> usersList =  userService.getAllUsers();
         if(usersList.isEmpty()){
-            throw new UsersNotFoundException("No users found!");
+            throw new rentalException("No users found!");
         }
         return usersList;
     }
