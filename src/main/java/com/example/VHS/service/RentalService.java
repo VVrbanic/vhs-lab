@@ -5,6 +5,7 @@ import com.example.VHS.entity.Price;
 import com.example.VHS.entity.Rental;
 import com.example.VHS.entity.User;
 import com.example.VHS.entity.Vhs;
+import com.example.VHS.exception.IdNotValidException;
 import com.example.VHS.repository.PriceRepository;
 import com.example.VHS.repository.RentalRepository;
 import org.slf4j.Logger;
@@ -21,26 +22,29 @@ public class RentalService {
 
     private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
 
-    @Autowired
-    private RentalRepository rentalRepository;
+    private final RentalRepository rentalRepository;
 
-    @Autowired
-    private VhsService vhsService;
+    private final VhsService vhsService;
 
+    private final PriceService priceService;
+
+    private final UserService userService;
     @Autowired
-    private PriceService priceService;
+    public RentalService(RentalRepository rentalRepository, VhsService vhsService, PriceService priceService, UserService userService){
+        this.vhsService = vhsService;
+        this.rentalRepository = rentalRepository;
+        this.priceService = priceService;
+        this.userService = userService;
+    }
 
     public Rental getRentalById(Integer id) {
-        return rentalRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return rentalRepository.findById(id).orElseThrow(() -> new IdNotValidException("Rental with id: " + id + " not found"));
     }
     public Rental rentRental(Rental rental) {
 
         rental.setRentedDate(LocalDateTime.now());
         rental.setDueDate(LocalDateTime.now().plusDays(7));
         rental.setReturnDate(null);
-        rental.setDue(null);
-        rental.setUnpaidDue(null);
-
         // Save rental to the database
         Rental rentRental = rentalRepository.save(rental);
         decreaseVHSStock(rental.getVhs());
@@ -50,29 +54,21 @@ public class RentalService {
 
     public Rental returnRental(Rental rental) {
         if(rental.getReturnDate().isAfter(rental.getDueDate())){
-            Integer noDaysLate = (int) java.time.temporal.ChronoUnit.DAYS.between(rental.getDueDate(), rental.getReturnDate());
+            Integer numDaysLate = (int) java.time.temporal.ChronoUnit.DAYS.between(rental.getDueDate(), rental.getReturnDate());
             List<Price> priceList = priceService.getAllPrices();
             Optional<Price> activePrice = priceList.stream()
                     .filter(price -> Boolean.TRUE.equals(price.getActive()))
                     .findFirst();
             //Optional error
             Float fee = activePrice.get().getPrice();
-            rental.setDue(fee*noDaysLate);
-            rental.setUnpaidDue(fee*noDaysLate);
+            User user = rental.getUser();
+            userService.save(user, fee*numDaysLate);
+            logger.info(user.getName() + "has a new due of "+ fee*numDaysLate + "and now the total unpaid due is " + user.getUnpaidDue());
         }
         Rental returnRental = rentalRepository.save(rental);
         increaseVHSStock(rental.getVhs());
 
         return returnRental;
-    }
-
-    public void payDue(Rental rental){
-        rentalRepository.save(rental);
-        if(rental.getUnpaidDue() == 0){
-            logger.info("Great you payed your due for:" + rental.getVhs().getName());
-        }else{
-            logger.info("Great you payed part of your due for:" + rental.getVhs().getName() + " you still need to pay:" + rental.getUnpaidDue());
-        }
     }
 
     private void decreaseVHSStock(Vhs vhs) {

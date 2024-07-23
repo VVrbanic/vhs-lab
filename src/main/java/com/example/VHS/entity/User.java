@@ -17,4 +17,8 @@ public class User {
     private String email;
     @Column(name="password")
     private String password;
+    @Column(name="total_due")
+    private Float totalDue;
+    @Column(name="unpaid_due")
+    private Float unpaidDue;
 }

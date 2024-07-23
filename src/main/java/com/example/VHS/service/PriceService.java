@@ -5,7 +5,6 @@ import com.example.VHS.exception.RentalException;
 import com.example.VHS.repository.PriceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,8 +16,12 @@ import java.util.Optional;
 public class PriceService {
 
     public static final Logger logger = LoggerFactory.getLogger(PriceService.class);
-    @Autowired
-    private PriceRepository priceRepository;
+
+    private final PriceRepository priceRepository;
+
+    public PriceService(PriceRepository priceRepository) {
+        this.priceRepository = priceRepository;
+    }
 
     public Price save(Price price, LocalDateTime time){
         Optional<Price> optionalActivePrice = getActivePrice();

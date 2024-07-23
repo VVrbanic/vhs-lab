@@ -1,7 +1,7 @@
 package com.example.VHS.service;
 
 import com.example.VHS.entity.User;
-import com.example.VHS.exception.RentalException;
+import com.example.VHS.exception.IdNotValidException;
 import com.example.VHS.exception.ResourceNotFoundException;
 import com.example.VHS.exception.UserDeletionException;
 import com.example.VHS.repository.RentalRepository;
@@ -9,8 +9,6 @@ import com.example.VHS.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -27,9 +25,19 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(Integer id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    public User save(User user, Float fee){
+        user.setTotalDue(user.getTotalDue() + fee);
+        user.setUnpaidDue(user.getUnpaidDue() + fee);
+        return userRepository.save(user);
     }
+    public User update(User user){
+        User userSaved = userRepository.save(user);
+        return userSaved;
+    }
+    public User getUserById(Integer id) {
+        return userRepository.findById(id).orElseThrow(() -> new IdNotValidException("User with id: " + id + " not found"));
+    }
+
 
     @Transactional
     public void deleteUserById(Integer id) {

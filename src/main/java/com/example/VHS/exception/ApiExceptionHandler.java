@@ -28,11 +28,45 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(IdNotValidException.class)
+    public ResponseEntity<String> handleIdNotValidException(IdNotValidException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(RentalReturnedException.class)
+    public ResponseEntity<String> handleRentalReturnedException(RentalReturnedException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RentIdException.class)
+    public ResponseEntity<String> handleRentIdException(RentIdException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidNumberException.class)
+    public ResponseEntity<String> handleInvalidNumberException(InvalidNumberException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(NoDueException.class)
+    public ResponseEntity<String> handleNoDueException(NoDueException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(DuePaidException.class)
+    public ResponseEntity<String> handleDuePaidException(DuePaidException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.OK);
+    }
 }

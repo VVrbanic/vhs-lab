@@ -1,25 +1,33 @@
 package com.example.VHS.controller;
 
 
+import com.example.VHS.entity.Rental;
 import com.example.VHS.entity.Vhs;
+import com.example.VHS.exception.InvalidNumberException;
 import com.example.VHS.exception.RentalException;
 import com.example.VHS.service.VhsService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/vhses")
 public class VhsController {
     private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+    private final VhsService vhsService;
 
-    @Autowired
-    private VhsService vhsService;
+    public VhsController(VhsService vhsService) {
+        this.vhsService = vhsService;
+    }
 
     @GetMapping
     public List<Vhs> getAllVhses(){
@@ -32,30 +40,37 @@ public class VhsController {
 
     //add new VHS
     @PostMapping("/create")
-    public ResponseEntity<Vhs> createVhs(@RequestParam String name,@RequestParam Integer totalNumber) {
-        try {
-            if (name.equals("") || totalNumber <= 0) {
-                throw new RentalException("Please check your request!");
-            }
-            List<Vhs> vhsList = vhsService.getAllVhs();
-            boolean vhsExists = vhsList.stream().anyMatch(item -> item.getName().equalsIgnoreCase(name));
-            if(vhsExists){
-                throw new RentalException("A VHS with the name " + name + " already exists.");
-            }
-            Vhs vhs = new Vhs();
-            vhs.setName(name);
-            vhs.setTotalNumber(totalNumber);
-            vhs.setNumberInStock(totalNumber);
-
-
-            Vhs savedVhs = vhsService.save(vhs);
-            return new ResponseEntity<>(savedVhs, HttpStatus.CREATED);
-
-
-        } catch (RuntimeException e) {
-
-            logger.error("Error while processing rental request: name={}, totalNumber={}", name, totalNumber, e);
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    public ResponseEntity<Vhs> createVhs(@Valid @RequestBody Vhs vhsNew) {
+        String name = vhsNew.getName();
+        Integer totalNumber = vhsNew.getTotalNumber();
+        List<Vhs> vhsList = vhsService.getAllVhs();
+        boolean vhsExists = vhsList.stream().anyMatch(item -> item.getName().equalsIgnoreCase(name));
+        if(vhsExists){
+            throw new RentalException("A VHS with the name " + name + " already exists.");
         }
+        if(vhsNew.getTotalNumber() < 1){
+            throw new InvalidNumberException("The total number has to be bigger than 0");
+
+        }
+        Vhs vhs = new Vhs();
+        vhs.setName(name);
+        vhs.setTotalNumber(totalNumber);
+        vhs.setNumberInStock(totalNumber);
+        Vhs savedVhs = vhsService.save(vhs);
+        return new ResponseEntity<>(savedVhs, HttpStatus.CREATED);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex){
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        return errors;
     }
 }

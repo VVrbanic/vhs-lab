@@ -20,7 +20,7 @@ public class Price {
     private Integer id;
 
     @Column(name = "price")
-    @NotNull(message = "Please enter the new price")
+    @NotNull(message = "Price is mandatroy")
     private Float price;
 
     @Column(name = "date_from")

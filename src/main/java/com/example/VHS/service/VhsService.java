@@ -1,21 +1,22 @@
 package com.example.VHS.service;
 
 import com.example.VHS.entity.Vhs;
+import com.example.VHS.exception.IdNotValidException;
 import com.example.VHS.repository.VhsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class VhsService {
+    private final VhsRepository vhsRepository;
 
-    @Autowired
-    private VhsRepository vhsRepository;
+    public VhsService(VhsRepository vhsRepository) {
+        this.vhsRepository = vhsRepository;
+    }
 
     public Vhs getVhsById(Integer id) {
-        return vhsRepository.findById(id).orElseThrow(() -> new RuntimeException("VHS not found"));
+        return vhsRepository.findById(id).orElseThrow(() -> new IdNotValidException("VHS with id: " + id + " not found"));
     }
 
     public List<Vhs> getAllVhs(){
