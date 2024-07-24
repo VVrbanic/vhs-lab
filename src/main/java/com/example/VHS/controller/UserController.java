@@ -1,10 +1,12 @@
 package com.example.VHS.controller;
 
+import com.example.VHS.entity.Rental;
 import com.example.VHS.entity.User;
 import com.example.VHS.exception.DuePaidException;
 import com.example.VHS.exception.NoDueException;
 import com.example.VHS.exception.RentalException;
 import com.example.VHS.service.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -53,7 +55,7 @@ public class UserController {
         Float currentDue = user.getUnpaidDue();
         if(currentDue == 0){
             throw new NoDueException("The user has no due");
-        }else if(currentDue < payment){
+        }else if(currentDue <= payment){
             throw new DuePaidException("The due is paid, the change is: " + (payment - currentDue));
         }else{
             Float newDue = currentDue - payment;
@@ -63,6 +65,11 @@ public class UserController {
         }
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<User> addNewUser(@Valid @RequestBody User user){
+        User createdUser = userService.create(user);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationException(MethodArgumentNotValidException ex){

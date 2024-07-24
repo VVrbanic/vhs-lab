@@ -25,5 +25,12 @@ public class Vhs {
     @Column(name="number_in_stock")
     private Integer numberInStock;
 
+    public Vhs(Integer id, String name, Integer totalNumber, Integer numberInStock) {
+        this.id = id;
+        this.name = name;
+        this.totalNumber = totalNumber;
+        this.numberInStock = numberInStock;
+    };
 
+    public Vhs(){};
 }

@@ -8,6 +8,7 @@ import com.example.VHS.repository.RentalRepository;
 import com.example.VHS.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final RentalRepository rentalRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     public UserService(UserRepository userRepository, RentalRepository rentalRepository){
         this.userRepository = userRepository;
@@ -33,6 +36,12 @@ public class UserService {
     public User update(User user){
         User userSaved = userRepository.save(user);
         return userSaved;
+    }
+
+    public User create(User user){
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        return  userRepository.save(user);
     }
     public User getUserById(Integer id) {
         return userRepository.findById(id).orElseThrow(() -> new IdNotValidException("User with id: " + id + " not found"));
