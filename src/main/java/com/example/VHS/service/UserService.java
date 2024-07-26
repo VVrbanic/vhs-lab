@@ -30,6 +30,8 @@ public class UserService {
         this.userRepository = userRepository;
         this.rentalRepository = rentalRepository;
     }
+
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

@@ -3,7 +3,6 @@ package com.example.VHS.repository;
 import com.example.VHS.entity.Rental;
 import com.example.VHS.entity.User;
 import com.example.VHS.entity.Vhs;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,45 +2,58 @@ package com.example.VHS.service;
 
 import com.example.VHS.entity.Vhs;
 import com.example.VHS.repository.VhsRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
+@DataJpaTest
 class VhsServiceTest {
 
-    @Mock
+    @Autowired
     private VhsRepository vhsRepository;
 
     private VhsService underTest;
 
     @BeforeEach
     void setUp(){
-
         underTest = new VhsService(vhsRepository);
     }
 
     @Test
-    void canGetAllVhs() {
-        //when
-        underTest.getAllVhs();
-        //then
-        verify(vhsRepository).findAll();
+    void DoesItSaveVhs() {
+        // given
+        Vhs vhs = new Vhs();
+        vhs.setName("New movie");
+        vhs.setTotalNumber(3);
+        vhs.setNumberInStock(3);
+        Vhs createdVhs = underTest.save(vhs);
+
+        // when
+        Vhs newVhs = vhsRepository.getReferenceById(1);
+
+        // then
+        assertEquals(createdVhs, newVhs);
     }
 
-    @Disabled
     @Test
-    void canSaveVhs() {
+    void DoesItGetRightUserById(){
+        // given
+        Vhs vhs = new Vhs();
+        vhs.setName("New movie");
+        vhs.setTotalNumber(3);
+        vhs.setNumberInStock(3);
+        Vhs createdVhs = vhsRepository.save(vhs);
+
+        // when
+        Vhs newVhs = underTest.getVhsById(1);
+
+        // then
+        assertEquals(createdVhs, newVhs);
+
     }
+
 }
