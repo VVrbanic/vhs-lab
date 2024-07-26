@@ -3,8 +3,6 @@ package com.example.VHS.controller;
 import com.example.VHS.entity.Rental;
 import com.example.VHS.entity.User;
 import com.example.VHS.entity.Vhs;
-import com.example.VHS.exception.IdNotValidException;
-import com.example.VHS.exception.RentIdException;
 import com.example.VHS.exception.RentalException;
 import com.example.VHS.exception.RentalReturnedException;
 import com.example.VHS.service.RentalService;
@@ -47,6 +45,7 @@ public class RentalController {
 
         //check if the film is avaliable
         if (vhs.getNumberInStock() <= 0){
+            logger.error("All the movies with this ID have been ranted", vhs.getId());
             throw new RentalException("No movie in stock!");
         }
 
@@ -65,11 +64,11 @@ public class RentalController {
     public ResponseEntity<Rental> returnRental(@RequestParam Integer id) {
         Rental rental = rentalService.getRentalById(id);
         if (rental.getReturnDate() != null) {
+            logger.error("Rental with id {} has already been returned!", id);
             throw new RentalReturnedException("This rental has already been returned!");
         }
-        //test
-        rental.setReturnDate(LocalDateTime.now().plusDays(10));
-        //rental.setReturnDate(LocalDateTime.now());
+        //rental.setReturnDate(LocalDateTime.now().plusDays(10));
+        rental.setReturnDate(LocalDateTime.now());
         Rental returnRental = rentalService.returnRental(rental);
         return new ResponseEntity<>(returnRental, HttpStatus.CREATED);
     }

@@ -16,7 +16,8 @@ public class VhsService {
     }
 
     public Vhs getVhsById(Integer id) {
-        return vhsRepository.findById(id).orElseThrow(() -> new IdNotValidException("VHS with id: " + id + " not found"));
+        return vhsRepository.findById(id).orElseThrow(() ->
+                new IdNotValidException("VHS with id: " + id + " not found"));
     }
 
     public List<Vhs> getAllVhs(){

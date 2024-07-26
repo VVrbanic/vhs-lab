@@ -46,9 +46,11 @@ public class VhsController {
         List<Vhs> vhsList = vhsService.getAllVhs();
         boolean vhsExists = vhsList.stream().anyMatch(item -> item.getName().equalsIgnoreCase(name));
         if(vhsExists){
+            logger.error("A VHS with the name " + name + " already exists.");
             throw new RentalException("A VHS with the name " + name + " already exists.");
         }
         if(vhsNew.getTotalNumber() < 1){
+            logger.error("The total number has to be bigger than 0");
             throw new InvalidNumberException("The total number has to be bigger than 0");
 
         }

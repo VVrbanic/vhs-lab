@@ -24,10 +24,10 @@ public class Price {
     private Float price;
 
     @Column(name = "date_from")
-    private LocalDateTime date_from;
+    private LocalDateTime dateFrom;
 
     @Column(name = "date_until")
-    private LocalDateTime date_until;
+    private LocalDateTime dateUntil;
 
     @Column (name = "active")
     private Boolean active;

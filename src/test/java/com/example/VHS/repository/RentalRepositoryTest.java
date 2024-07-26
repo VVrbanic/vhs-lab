@@ -3,6 +3,8 @@ package com.example.VHS.repository;
 import com.example.VHS.entity.Rental;
 import com.example.VHS.entity.User;
 import com.example.VHS.entity.Vhs;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,8 +25,14 @@ class RentalRepositoryTest {
     @Autowired
     private VhsRepository vhsRepository;
 
+    @AfterEach
+    void tearDown(){
+        underTest.deleteAll();
+
+    }
+
     @Test
-    void itShouldCheckIfRentalExistsByUserId() {
+    void itShouldCheckIfRentalByUserIdExists() {
         // given
         int userId = 1;
         Rental rental = new Rental();
@@ -49,9 +57,22 @@ class RentalRepositoryTest {
         underTest.save(rental);
 
         // when
-        boolean exists = underTest.existsByUserId(user.getId());
+        boolean exists = underTest.existsByUserId(userId);
 
         // then
         assertThat(exists).isTrue();
+    }
+
+    @Test
+    void itShouldCheckIfRentalByUserIdDoesNotExists() {
+        // given
+        int userId = 1;
+        Rental rental = new Rental();
+
+        // when
+        boolean exists = underTest.existsByUserId(userId);
+
+        // then
+        assertThat(exists).isFalse();
     }
 }

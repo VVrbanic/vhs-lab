@@ -27,11 +27,12 @@ public class PriceService {
         Optional<Price> optionalActivePrice = getActivePrice();
         if(optionalActivePrice.isEmpty()){
             logger.warn("There is no active price!");
-            throw new RentalException("There is no active price, the new price has been added and set to the active price");
+            price.setDateFrom(LocalDateTime.now());
         }else{
+            System.out.println("Hello I am here!");
             Price activePrice = optionalActivePrice.get();
             activePrice.setActive(Boolean.FALSE);
-            activePrice.setDate_until(time);
+            activePrice.setDateUntil(time);
             logger.info("The price has been changed:" + activePrice.getPrice() + "to:" + price.getPrice());
         }
         return priceRepository.save(price);

@@ -3,8 +3,6 @@ package com.example.VHS.controller;
 import com.example.VHS.entity.Price;
 import com.example.VHS.service.PriceService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -19,8 +17,6 @@ import java.util.Map;
 @RequestMapping("/prices")
 public class PriceController {
 
-
-    private static final Logger logger = LoggerFactory.getLogger(PriceController.class);
     private final PriceService priceService;
 
     public PriceController(PriceService priceService) {
@@ -32,7 +28,7 @@ public class PriceController {
         //add new price
         LocalDateTime time = LocalDateTime.now();
         price.setActive(Boolean.TRUE);
-        price.setDate_from(time);
+        price.setDateFrom(time);
         Price newPrice = priceService.save(price, time);
         return new ResponseEntity<>(newPrice, HttpStatus.CREATED);
     }

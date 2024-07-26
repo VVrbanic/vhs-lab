@@ -1,6 +1,5 @@
 package com.example.VHS.controller;
 
-import com.example.VHS.entity.Rental;
 import com.example.VHS.entity.User;
 import com.example.VHS.exception.DuePaidException;
 import com.example.VHS.exception.NoDueException;
@@ -34,6 +33,7 @@ public class UserController {
     public List<User> getAllUsers() {
         List<User> usersList =  userService.getAllUsers();
         if(usersList.isEmpty()){
+            logger.error("There is no users in the user table");
             throw new RentalException("No users found!");
         }
         return usersList;
@@ -54,14 +54,19 @@ public class UserController {
         User user = userService.getUserById(id);
         Float currentDue = user.getUnpaidDue();
         if(currentDue == 0){
+            logger.info("The user has no due");
             throw new NoDueException("The user has no due");
         }else if(currentDue <= payment){
-            throw new DuePaidException("The due is paid, the change is: " + (payment - currentDue));
+            logger.info("The due is paid, the change is: " + (payment - currentDue));
+            return new ResponseEntity<>(user, HttpStatus.OK);
+
         }else{
             Float newDue = currentDue - payment;
             user.setUnpaidDue(newDue);
             userService.update(user);
-            throw new DuePaidException("A part of the due is paid, the user still owns: " + newDue);
+            logger.info("A part of the due is paid, the user still owns: " + newDue);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+
         }
     }
 
