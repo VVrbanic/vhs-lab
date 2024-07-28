@@ -72,6 +72,8 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<User> addNewUser(@Valid @RequestBody User user){
+        user.setTotalDue(0f);
+        user.setUnpaidDue(0f);
         User createdUser = userService.create(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }

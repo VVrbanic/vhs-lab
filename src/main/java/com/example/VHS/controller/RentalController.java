@@ -70,7 +70,7 @@ public class RentalController {
         //rental.setReturnDate(LocalDateTime.now().plusDays(10));
         rental.setReturnDate(LocalDateTime.now());
         Rental returnRental = rentalService.returnRental(rental);
-        return new ResponseEntity<>(returnRental, HttpStatus.CREATED);
+        return new ResponseEntity<>(returnRental, HttpStatus.OK);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

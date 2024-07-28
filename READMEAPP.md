@@ -2,6 +2,7 @@
 
 In front of you is a simple application that helps VHS stores rent VHS tapes. This README.md will consist of two parts. The first part will show the structure of the database, the second part will go through the controllers showing the functionalities and the thought process behind them as well as some ideas what could the next steps be.
 
+
 ## 1. DATABASE
 
 ### MySQL
