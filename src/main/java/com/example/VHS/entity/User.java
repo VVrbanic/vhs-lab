@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @Table(name = "USERS")
@@ -33,9 +35,9 @@ public class User {
     private String password;
 
     @Column(name="total_due")
-    private Float totalDue;
+    private BigDecimal totalDue;
     @Column(name="unpaid_due")
-    private Float unpaidDue;
+    private BigDecimal unpaidDue;
 
     public User(Integer id, String name) {
         this.id = id;

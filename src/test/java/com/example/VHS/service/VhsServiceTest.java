@@ -2,6 +2,7 @@ package com.example.VHS.service;
 
 import com.example.VHS.entity.Vhs;
 import com.example.VHS.repository.VhsRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,8 @@ class VhsServiceTest {
         Vhs createdVhs = underTest.save(vhs);
 
         // when
-        Vhs newVhs = vhsRepository.getReferenceById(1);
+        Vhs newVhs = vhsRepository.getReferenceById(createdVhs.getId());
+        //Vhs newVhs = vhsRepository.getReferenceById(1);
 
         // then
         assertEquals(createdVhs, newVhs);

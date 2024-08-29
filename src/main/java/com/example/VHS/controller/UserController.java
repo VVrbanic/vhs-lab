@@ -14,6 +14,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class UserController {
     private final UserService userService;
 
     public UserController(UserService userService) {
+
         this.userService = userService;
     }
 
@@ -50,18 +52,18 @@ public class UserController {
         }
     }
     @PutMapping("/payDue")
-    public ResponseEntity<User> payDue(@RequestParam Integer id, @RequestParam Float payment){
+    public ResponseEntity<User> payDue(@RequestParam Integer id, @RequestParam BigDecimal payment){
         User user = userService.getUserById(id);
-        Float currentDue = user.getUnpaidDue();
-        if(currentDue == 0){
+        BigDecimal currentDue = user.getUnpaidDue();
+        if(currentDue.equals(0)){
             logger.info("The user has no due");
             throw new NoDueException("The user has no due");
-        }else if(currentDue <= payment){
-            logger.info("The due is paid, the change is: " + (payment - currentDue));
+        }else if(currentDue.compareTo(payment) != 1){
+            logger.info("The due is paid, the change is: " + (payment.subtract(currentDue)));
             return new ResponseEntity<>(user, HttpStatus.OK);
 
         }else{
-            Float newDue = currentDue - payment;
+            BigDecimal newDue = currentDue.subtract(payment);
             user.setUnpaidDue(newDue);
             userService.update(user);
             logger.info("A part of the due is paid, the user still owns: " + newDue);
@@ -72,8 +74,9 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<User> addNewUser(@Valid @RequestBody User user){
-        user.setTotalDue(0f);
-        user.setUnpaidDue(0f);
+
+        user.setTotalDue(BigDecimal.ZERO);
+        user.setUnpaidDue(BigDecimal.ZERO);
         User createdUser = userService.create(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }

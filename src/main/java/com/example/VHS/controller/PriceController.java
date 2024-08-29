@@ -1,6 +1,7 @@
 package com.example.VHS.controller;
 
 import com.example.VHS.entity.Price;
+import com.example.VHS.entity.PriceValidation;
 import com.example.VHS.service.PriceService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,8 @@ public class PriceController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Price> addNewPrice(@Valid @RequestBody Price price){
-        //add new price
-        LocalDateTime time = LocalDateTime.now();
-        price.setActive(Boolean.TRUE);
-        price.setDateFrom(time);
-        Price newPrice = priceService.save(price, time);
+    public ResponseEntity<Price> addNewPrice(@Valid @RequestBody PriceValidation price){
+        Price newPrice = priceService.save(price);
         return new ResponseEntity<>(newPrice, HttpStatus.CREATED);
     }
 

@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -36,9 +38,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User save(User user, Float fee){
-        user.setTotalDue(user.getTotalDue() + fee);
-        user.setUnpaidDue(user.getUnpaidDue() + fee);
+    public User save(User user, BigDecimal fee){
+        user.setTotalDue(user.getTotalDue().add(fee));
+        user.setUnpaidDue(user.getUnpaidDue().add(fee));
         return userRepository.save(user);
     }
     public User update(User user){

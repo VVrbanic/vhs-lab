@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +42,6 @@ public class RentalService {
         return rentalRepository.findById(id).orElseThrow(() -> new IdNotValidException("Rental with id: " + id + " not found"));
     }
     public Rental rentRental(Rental rental) {
-
         rental.setRentedDate(LocalDateTime.now());
         rental.setDueDate(LocalDateTime.now().plusDays(7));
         rental.setReturnDate(null);
@@ -54,16 +54,16 @@ public class RentalService {
 
     public Rental returnRental(Rental rental) {
         if(rental.getReturnDate().isAfter(rental.getDueDate())){
-            Integer numDaysLate = (int) java.time.temporal.ChronoUnit.DAYS.between(rental.getDueDate(), rental.getReturnDate());
+            BigDecimal numDaysLate = new BigDecimal((int) java.time.temporal.ChronoUnit.DAYS.between(rental.getDueDate(), rental.getReturnDate()));
             List<Price> priceList = priceService.getAllPrices();
             Optional<Price> activePrice = priceList.stream()
                     .filter(price -> Boolean.TRUE.equals(price.getActive()))
                     .findFirst();
             //Optional error
-            Float fee = activePrice.get().getPrice();
+            BigDecimal fee = activePrice.get().getPrice();
             User user = rental.getUser();
-            userService.save(user, fee*numDaysLate);
-            logger.info(user.getName() + "has a new due of "+ fee*numDaysLate + "and now the total unpaid due is " + user.getUnpaidDue());
+            userService.save(user, fee.multiply(numDaysLate));
+            logger.info(user.getName() + "has a new due of "+ fee.multiply(numDaysLate) + "and now the total unpaid due is " + user.getUnpaidDue());
         }
         Rental returnRental = rentalRepository.save(rental);
         increaseVHSStock(rental.getVhs());
