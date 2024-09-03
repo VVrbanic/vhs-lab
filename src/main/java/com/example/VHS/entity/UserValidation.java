@@ -10,22 +10,28 @@ import java.math.BigDecimal;
 @Entity
 @Data
 @Table(name = "USERS")
-public class User {
+public class UserValidation {
+    @Valid
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Integer id;
 
     @Column(name="name")
+    @NotNull(message = "Name is mandatory")
     private String name;
 
     @Column(name = "user_name")
+    @NotNull(message = "User name is mandatory")
     private String userName;
 
     @Column(name="email")
+    @NotNull(message = "Email is mandatory")
     private String email;
 
     @Column(name="password")
+    @NotNull(message = "Password is mandatory")
     private String password;
 
     @Column(name="total_due")
@@ -33,17 +39,10 @@ public class User {
     @Column(name="unpaid_due")
     private BigDecimal unpaidDue;
 
-    public User(Integer id, String name) {
+    public UserValidation(Integer id, String name) {
         this.id = id;
         this.name = name;
     };
 
-    public User(){};
-
-    public void generateUserFromUserValidation(UserValidation userValidation) {
-        this.name = userValidation.getName();
-        this.email = userValidation.getEmail();
-        this.password = userValidation.getPassword();
-        this.userName = userValidation.getUserName();
-    }
+    public UserValidation(){};
 }

@@ -1,9 +1,11 @@
 package com.example.VHS.controller;
 
 import com.example.VHS.entity.User;
+import com.example.VHS.entity.UserValidation;
 import com.example.VHS.exception.DuePaidException;
 import com.example.VHS.exception.NoDueException;
 import com.example.VHS.exception.RentalException;
+import com.example.VHS.exception.UserExistsException;
 import com.example.VHS.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -34,10 +36,6 @@ public class UserController {
     @GetMapping
     public List<User> getAllUsers() {
         List<User> usersList =  userService.getAllUsers();
-        if(usersList.isEmpty()){
-            logger.error("There is no users in the user table");
-            throw new RentalException("No users found!");
-        }
         return usersList;
     }
 
@@ -53,32 +51,13 @@ public class UserController {
     }
     @PutMapping("/payDue")
     public ResponseEntity<User> payDue(@RequestParam Integer id, @RequestParam BigDecimal payment){
-        User user = userService.getUserById(id);
-        BigDecimal currentDue = user.getUnpaidDue();
-        if(currentDue.equals(0)){
-            logger.info("The user has no due");
-            throw new NoDueException("The user has no due");
-        }else if(currentDue.compareTo(payment) != 1){
-            logger.info("The due is paid, the change is: " + (payment.subtract(currentDue)));
-            return new ResponseEntity<>(user, HttpStatus.OK);
-
-        }else{
-            BigDecimal newDue = currentDue.subtract(payment);
-            user.setUnpaidDue(newDue);
-            userService.update(user);
-            logger.info("A part of the due is paid, the user still owns: " + newDue);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-
-        }
+        return userService.payDue(id, payment);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<User> addNewUser(@Valid @RequestBody User user){
-
-        user.setTotalDue(BigDecimal.ZERO);
-        user.setUnpaidDue(BigDecimal.ZERO);
-        User createdUser = userService.create(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    public ResponseEntity<User> addNewUser(@Valid @RequestBody UserValidation user){
+        ResponseEntity<User> response = userService.addUser(user);
+        return response;
     }
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -93,4 +72,16 @@ public class UserController {
 
         return errors;
     }
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(UserExistsException.class) // Use a different exception type
+    public Map<String, String> handleConflictException(UserExistsException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        // Populate the errors map with appropriate conflict-related messages
+        errors.put("conflict", ex.getMessage());
+
+        return errors;
+    }
+
+
 }
