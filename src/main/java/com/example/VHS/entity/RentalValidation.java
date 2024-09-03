@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table(name = "RENTALS")
-public class Rental {
+public class RentalValidation {
+    @Valid
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +20,12 @@ public class Rental {
 
     @ManyToOne
     @JoinColumn(name = "vhs_id", referencedColumnName = "id")
+    @NotNull(message = "VHS is mandatory")
     private Vhs vhs;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @NotNull(message = "User is mandatory")
     private User user;
 
     @Column(name = "rented_date")
