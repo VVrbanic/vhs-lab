@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DuePaidException extends RuntimeException{
-    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(DuePaidException.class);
 
     public DuePaidException(String message) {
         super(message);

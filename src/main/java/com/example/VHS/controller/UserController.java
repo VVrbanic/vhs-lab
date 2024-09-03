@@ -2,14 +2,9 @@ package com.example.VHS.controller;
 
 import com.example.VHS.entity.User;
 import com.example.VHS.entity.UserValidation;
-import com.example.VHS.exception.DuePaidException;
-import com.example.VHS.exception.NoDueException;
-import com.example.VHS.exception.RentalException;
 import com.example.VHS.exception.UserExistsException;
 import com.example.VHS.service.UserService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -25,7 +20,6 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -73,11 +67,10 @@ public class UserController {
         return errors;
     }
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(UserExistsException.class) // Use a different exception type
+    @ExceptionHandler(UserExistsException.class)
     public Map<String, String> handleConflictException(UserExistsException ex) {
         Map<String, String> errors = new HashMap<>();
 
-        // Populate the errors map with appropriate conflict-related messages
         errors.put("conflict", ex.getMessage());
 
         return errors;

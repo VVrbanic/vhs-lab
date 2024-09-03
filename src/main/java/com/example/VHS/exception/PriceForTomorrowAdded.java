@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PriceForTomorrowAdded extends RuntimeException {
-    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(PriceForTomorrowAdded.class);
 
     public PriceForTomorrowAdded(String message) {
         super(message);

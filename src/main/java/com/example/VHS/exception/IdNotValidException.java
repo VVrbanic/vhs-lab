@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class IdNotValidException extends RuntimeException{
-    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(IdNotValidException.class);
 
     public IdNotValidException(String message) {
         super(message);

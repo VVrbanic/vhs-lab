@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NoDueException extends RuntimeException{
-    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(NoDueException.class);
 
     public NoDueException(String message) {
         super(message);

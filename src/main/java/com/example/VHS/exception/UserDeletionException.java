@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UserDeletionException extends RuntimeException {
-    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserDeletionException.class);
 
     public UserDeletionException(String message) {
         super(message);

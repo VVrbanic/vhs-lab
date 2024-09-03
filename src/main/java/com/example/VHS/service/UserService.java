@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 @Service
 public class UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final RentalRepository rentalRepository;
 
@@ -104,8 +104,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-        List<User> userList = this.getAllUsers();
-        checkIfUserExsits(userList, user);
+        checkIfUserExists(user);
         User createdUser = userRepository.save(user);
 
         if(createdUser.getId() == null){
@@ -117,7 +116,8 @@ public class UserService {
         }
     }
 
-    public void checkIfUserExsits(List<User> userList, User user){
+    public void checkIfUserExists(User user){
+        List<User> userList = this.getAllUsers();
         Predicate<User> emailConflict = userCheck -> user.getEmail().equals(userCheck.getEmail());
         Predicate<User> userNameConflict = userCheck -> user.getUserName().equals(userCheck.getUserName());
 

@@ -10,14 +10,12 @@ public class RentalException extends RuntimeException {
     public RentalException(String message) {
         super(message);
         logger.warn(message);
-        System.out.println(message);
 
     }
 
     public RentalException(String message, Throwable cause) {
         super(message, cause);
         logger.warn(message);
-        System.out.println(message);
 
     }
 }

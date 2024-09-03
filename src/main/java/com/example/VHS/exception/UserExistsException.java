@@ -1,11 +1,10 @@
 package com.example.VHS.exception;
 
-import com.example.VHS.controller.RentalController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UserExistsException extends RuntimeException{
-    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserExistsException.class);
 
     public UserExistsException(String message) {
         super(message);

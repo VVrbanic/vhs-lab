@@ -6,7 +6,6 @@ import com.example.VHS.entity.Rental;
 import com.example.VHS.entity.User;
 import com.example.VHS.entity.Vhs;
 import com.example.VHS.exception.IdNotValidException;
-import com.example.VHS.repository.PriceRepository;
 import com.example.VHS.repository.RentalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,7 @@ import java.util.Optional;
 @Service
 public class RentalService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RentalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RentalService.class);
 
     private final RentalRepository rentalRepository;
 
